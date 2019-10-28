@@ -1,0 +1,429 @@
+#container {
+    position: absolute; /* absolute */
+    top:20%;
+    /*left: 8em;*/
+    right: 1em;/*-100px;*/
+    font-size: 100%;
+    /* bottom: 15em; *//* 7em; */
+    border-radius: 10px;
+    z-index: 999;
+    width: 120px;
+    white-space: nowrap;
+    background-color: rgba(255,255,255,0.1);
+}
+
+.switch input#animate-start {
+    margin: 5px 0 0 0.3em;
+    float: left;
+    width: 30px;
+    height: 20px;
+    position: relative;
+    border: 1px solid #dfdfdf;
+    border-radius: 20px;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+    background-clip: content-box;
+    display: inline-block;
+    -webkit-appearance: none;
+    user-select: none;
+    outline: none;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.switch input#animate-start:before {
+    content: '';
+    width: 18px;
+    height: 18px;
+    position: absolute;
+    top: 0px;
+    left: 0;
+    background: white;
+    border-radius: 20px;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+}
+
+.switch input#animate-start:checked:before {
+    left: 10px;
+    background: none;
+    box-shadow: 0 0 0 10px #f7a715;
+}
+
+/*.switch a {
+    background: rgba(0, 0, 0, .5);
+    color: #fff;
+    border-radius: 2em;
+    padding: 0 1.25em;
+    line-height: 2.142em;
+    margin: 3px 0 0 0em;
+    font-family: Helvetica Neue, Arial, Helvetica, sans-serif;
+    font-weight: 700;
+    display: inline-block;
+    transition: .2s;
+    position: relative;
+    float: left;
+}
+
+.switch a span.dynamicWind {
+    background: #fff;
+    box-shadow: 0 1.5px 3px rgba(0, 0, 0, .25);
+    border-radius: 2em;
+    width: 2.142em;
+    height: 2.142em;
+    position: absolute;
+    left: -3em;
+    overflow: hidden;
+    transition: .2s;
+
+    background: #ffffff;
+    box-shadow: 0 1.5px 3px rgba(0, 0, 0, .25);
+    border-radius: 2em;
+    width: 2.142em;
+    height: 2.142em;
+    position: absolute;
+    left: -3em;
+    overflow: hidden;
+    transition: .2s;
+}
+*/
+
+#container .layerSelect, #container .factorSelect {
+    position: relative;
+    clear: both;
+    float: left;
+    width: 100%;
+    line-height: 24px;
+    /* margin: .25em 0 .5em 0.9em; */
+    padding-left: 10px;
+    border: 1px solid #1b9de8;
+    border-radius: 12px;
+    margin: 10px 0;
+    background: rgba(0, 0, 0, 0.3);
+    font-size: 16px;
+    font-family: ËÎÌו;
+    text-align: center;
+}
+
+#container > a, .switch a, #container .factorBox a, #container .layerBox a {
+    background: rgba(0, 0, 0, .5);
+    color: #fff;
+    border-radius: 2em;
+    padding: 0 1.25em;
+    line-height: 2.0em;
+    margin: 3px 0 0 3.5em;
+    font-family: Helvetica Neue, Arial, Helvetica, sans-serif;
+    font-weight: 400;
+    display: inline-block;
+    transition: .2s;
+    position: relative;
+    float: left;
+    clear: both;
+}
+
+#container .factorBox a:hover, #container .layerBox a:hover {
+    background: rgba(0, 0, 0, .75)
+}
+
+#container > a span, .switch a span.dynamicWind, #container .factorBox a span,#container .layerBox a span {
+    background: #fff;
+    box-shadow: 0 1.5px 3px rgba(0, 0, 0, .25);
+    border-radius: 2em;
+    width: 2.142em;
+    height: 2.142em;
+    position: absolute;
+    left: -3em;
+    overflow: hidden;
+    transition: .2s;
+}
+
+#container .factorBox a:after, #container .layerBox a:after, .switch a:after {
+    content: "";
+    position: absolute;
+    left: -3.5em;
+    top: -2px;
+    bottom: -2px;
+    right: -0.5em;
+    border-radius: 2em;
+}
+
+#container .factorBox a.active,
+#container .factorBox a.active span, #container .layerBox a.active,
+#container .layerBox a.active span, .switch a.active, .switch a.active span {
+    background-color: #00b0ea;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, .4);
+    box-shadow: 0 1.5px 3px rgba(0, 0, 0, .25)
+}
+
+#container .layerBox a span.clouds:after {
+    background-position: 0 0
+}
+#container .layerBox a span.temp:after {
+    background-position: 0 -90px
+}
+#container .layerBox a span.rain:after {
+    background-position: 0 -180px
+}
+
+#container .layerBox a span.pressure:after {
+    background-position: 0 -30px
+}
+
+#container .layerBox a span.humidity:after {
+    background-position: 0 -270px
+}
+
+#container .layerBox a span.temperature:after {
+    background-position: 0 -90px
+}
+
+#container .layerBox a span.wind:after {
+    background-position: 0 -120px
+}
+#container .layerBox a span.self:after {
+    background-position: 0 -300px
+}
+#container .layerBox a span.none:after {
+    background-position: 0 -240px
+}
+#container .layerBox a span.gust {
+    display: none
+}
+
+#container .layerBox a.active span.clouds:after {
+    background-position: -30px 0
+}
+
+#container .layerBox a.active span.rain:after {
+    background-position: -30px -180px
+}
+
+#container .layerBox a.active span.pressure:after {
+    background-position: -30px -30px
+}
+
+#container .layerBox a.active span.humidity:after {
+    background-position: -30px -270px
+}
+
+#container .layerBox a.active span.temperature:after {
+    background-position: -30px -90px
+}
+
+#container .layerBox a.active span.wind:after {
+    background-position: -30px -120px
+}
+
+
+#container .layerBox a span.aqi:after {
+    background-position: 0 0
+}
+
+#container .layerBox a span.pm2_5:after {
+    background-position: 0 -180px
+}
+
+#container .layerBox a span.pm10:after {
+    background-position: 0 -30px
+}
+
+#container .layerBox a span.so2:after {
+    background-position: 0 -270px
+}
+
+#container .layerBox a span.no2:after {
+    background-position: 0 -90px
+}
+
+#container .layerBox a span.co:after {
+    background-position: 0 -120px
+}
+
+#container .layerBox a span.o3:after {
+    background-position: 0 -150px
+}
+
+#container .layerBox a.active span.aqi:after {
+    background-position: -30px 0
+}
+
+#container .layerBox a.active span.pm2_5:after {
+    background-position: -30px -180px
+}
+
+#container .layerBox a.active span.pm10:after {
+    background-position: -30px -30px
+}
+
+#container .layerBox a.active span.so2:after {
+    background-position: -30px -270px
+}
+
+#container .layerBox a.active span.no2:after {
+    background-position: -30px -90px
+}
+
+#container .layerBox a.active span.co:after {
+    background-position: -30px -120px
+}s
+
+ #container .layerBox a.active span.o3:after {
+     background-position: -30px -150px
+ }
+
+.factor {
+    color: #fff;
+    height: 1.875em;
+    position: absolute;
+    z-index: 2;
+    font-weight: 700;
+    font-size: 90%;
+    white-space: nowrap
+}
+
+.name,
+.factor {
+    line-height: 1.875em;
+    font-family: Helvetica Neue, Arial, Helvetica, sans-serif
+}
+
+.name {
+    padding-right: .25em;
+    text-shadow: 0 0 3px rgba(0, 0, 0, .5), 1px 1px 3px rgba(0, 0, 0, .5);
+    font-weight: 400
+}
+
+.name,
+.main {
+    display: inline-block;
+    vertical-align: top
+}
+
+.main {
+    overflow: hidden;
+    border-radius: 1em
+}
+
+.factor a {
+    background: rgba(0, 0, 0, .5);
+    padding: 0 1em;
+    transition: .2s;
+    display: inline-block;
+    cursor: pointer
+}
+
+.factor a+a {
+    margin-left: 1px
+}
+
+.factor a:hover {
+    background: rgba(0, 0, 0, .75)
+}
+
+.factor a.active {
+    background: #f7a715;
+    box-shadow: 0 1.5px 3px rgba(0, 0, 0, .25);
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, .4);
+    color: #fff
+}
+
+.l {
+    right: 5em
+}
+
+.l, .r {
+    bottom: 6.5em
+}
+
+.r {
+    left: 2.25em
+}
+
+.aSelect,
+.xz {
+    position: relative;
+    clear: both;
+    float: left;
+    margin: .25em 0 .5em .9em
+}
+
+.aSelect,
+.xz {
+    font-size: 100%
+}
+
+.xz {
+    display: none
+}
+
+.l .name {
+    display: block
+}
+
+.factor.aSelect {
+    height: auto
+}
+
+.factor.aSelect .main {
+    margin-left: 2px;
+    background: rgba(0, 0, 0, .5)
+}
+
+.factor.aSelect a {
+    background: 0;
+    display: block;
+    color: #fff;
+    font-family: Helvetica Neue, Arial, Helvetica, sans-serif;
+    font-weight: 400;
+    position: relative;
+    opacity: 0;
+    padding-right: 2.5em;
+    cursor: default;
+    height: 1.875em
+}
+
+.factor.aSelect .main:hover {
+    background: rgba(0, 0, 0, .75)
+}
+
+/* .factor.aSelect a:after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 1em;
+  width: 16px;
+  height: 16px;
+  margin: -8px -8px 0 0;
+  background: url($ctxStatic + '/gbq/modules/air/AtmoWindy/images/icons.png') 0 -321px no-repeat
+} */
+
+.factor.aSelect a+a {
+    margin: -1.875em 0 0
+}
+
+.factor.aSelect a.active {
+    opacity: 1
+}
+
+.factor.aSelect select {
+    margin: -1.875em auto 0;
+    position: relative;
+    z-index: 3;
+    width: 90%;
+    height: 100%;
+    display: block;
+    opacity: 0;
+    font-family: inherit;
+    font-family: Helvetica Neue, Arial, Helvetica, sans-serif;
+    font-weight: 400;
+    height: 1.875em;
+    -webkit-appearance: none
+}
+
+.factor.aSelect option {
+    padding: 0 .5em
+}

@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0" />
+		<link rel="stylesheet" href="../plugin/openlayers/ol.css" />
+		<link rel="stylesheet" type="text/css" href="../css/timeline.css" />
+		<link rel="stylesheet" type="text/css" href="../css/layerItem.css" />
+        <link rel="stylesheet" type="text/css" href="../../wind-v6.0/jquery/cityselect.css">
+
+		<script src="../plugin/jquery/jquery3.3.1.js"></script>
+		<script src="../plugin/openlayers/ol.js"></script>
+		<!--<script src="https://cdn.jsdelivr.net/npm/openlayers/dist/ol.js"></script>-->
+		<script src="../plugin/axios/axios.js"></script>
+		<script src="../plugin/jsUtils/aqiPublic.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../plugin/jsUtils/DateUtils.js"></script>
+        <script src="../plugin/windy/common.js"></script>
+        <script src="../plugin/windy/RequestInterface.js"></script>
+        <script src="../plugin/windy/MapModel.js"></script>
+        <script src="../plugin/windy/Windy.js"></script>
+
+        <script src="../../wind-v6.0/jquery/colorConfig.js"></script>
+        <script src="../../wind-v6.0/jquery/citySelect.js"></script>
+        <script src="../../wind-v6.0/jquery/d3.js"></script>
+        <script src="../../wind-v6.0/plugin/Highcharts-7.0.3/code/highcharts.js"></script>
+        <script src="../../wind-v6.0/plugin/Highcharts-7.0.3/code/highcharts-more.js"></script>
+		<title>wind改良版</title>
+		<style>
+			ul,
+			ul li,
+			dl,
+			dl dt,
+			dl dd {
+				list-style: none;
+			}
+
+			* {
+				box-sizing: border-box;
+			}
+
+			html,
+			body,
+			#map {
+				height: 100%;
+				padding: 0;
+				margin: 0;
+			}
+
+			#popup {
+				display: none;
+			}
+
+			#windpopup {
+				display: none;
+			}
+
+			.ol-wind-popup {
+				text-align: center;
+				font-size: 12px;
+				position: absolute;
+				background-color: rgba(255, 255, 255, 0.5);
+				-webkit-filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.2));
+				filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.2));
+				padding: 5px;
+				border-radius: 10px;
+				border: 1px solid #cccccc;
+				bottom: 12px;
+				left: -50px;
+				min-width: 120px;
+			}
+
+			.ol-wind-popup:after,
+			.ol-wind-popup:before {
+				top: 100%;
+				border: solid transparent;
+				content: " ";
+				height: 0;
+				width: 0;
+				position: absolute;
+				pointer-events: none;
+			}
+
+			.ol-wind-popup:after {
+				border-top-color: rgba(255, 255, 255, 0.4);
+				border-width: 10px;
+				left: 48px;
+				margin-left: -10px;
+			}
+
+			.ol-wind-popup:before {
+				border-top-color: rgba(255, 255, 255, 0.4);
+				border-width: 11px;
+				left: 48px;
+				margin-left: -11px;
+			}
+
+			.ol-popup {
+				position: absolute;
+				background-color: white;
+				-webkit-filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.2));
+				filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.2));
+				padding: 15px;
+				border-radius: 10px;
+				border: 1px solid #cccccc;
+				bottom: 12px;
+				left: -50px;
+				min-width: 420px;
+                z-index: 1000;
+			}
+
+			.ol-popup:after,
+			.ol-popup:before {
+				top: 100%;
+				border: solid transparent;
+				content: " ";
+				height: 0;
+				width: 0;
+				position: absolute;
+				pointer-events: none;
+			}
+
+			.ol-popup:after {
+				border-top-color: white;
+				border-width: 10px;
+				left: 48px;
+				margin-left: -10px;
+			}
+
+			.ol-popup:before {
+				border-top-color: #cccccc;
+				border-width: 11px;
+				left: 48px;
+				margin-left: -11px;
+			}
+
+			.ol-popup-closer {
+				text-decoration: none;
+				position: absolute;
+				top: 2px;
+				right: 8px;
+			}
+
+			.ol-popup-closer:after {
+				content: "✖";
+			}
+
+			.ol-popup-chart {
+				width: 16px;
+				height: 13px;
+				background: url("../images/icon-pic.png") no-repeat -115px -15px;
+				position: absolute;
+				right: 25px;
+				top: 7px;
+			}
+
+			div.ol-layerSwitch {
+				position: absolute;
+				height: 32px;
+				width: 32px;
+				right: 10px;
+				top: 10px;
+				z-index: 999;
+				cursor: pointer;
+				background: url("../images/layerswitch.png");
+			}
+
+			div.layer_panel {
+				width: 80px;
+				min-width: 73px;
+				position: absolute;
+				will-change: top, left;
+				transform-origin: center top 0px;
+				top: 5px;
+				/* left: 55px; */
+				right: 34px;
+				width: inherit;
+				max-height: 200px;
+				overflow: auto;
+				margin: 5px 0;
+				padding: 5px 0;
+				background-color: #fff;
+				-webkit-box-sizing: border-box;
+				box-sizing: border-box;
+				border-radius: 4px;
+				-webkit-box-shadow: 0 1px 6px rgba(0, 0, 0, .2);
+				box-shadow: 0 1px 6px rgba(0, 0, 0, .2);
+				position: absolute;
+				z-index: 900;
+			}
+
+			div.layer_panel.hide {
+				display: none;
+			}
+
+			ul.layer_dropDownList {
+				min-width: 100%;
+				list-style: none;
+				float: left;
+				text-align: center;
+				padding: 0;
+				margin: 0;
+			}
+
+			li.layerItem {
+				margin: 0;
+				line-height: normal;
+				padding: 7px 16px;
+				clear: both;
+				color: #515a6e;
+				font-size: 12px !important;
+				white-space: nowrap;
+				list-style: none;
+				cursor: pointer;
+				-webkit-transition: background .2s ease-in-out;
+				transition: background .2s ease-in-out;
+			}
+
+			li.layerItem.selected {
+				color: #2d8cf0;
+				background: #f3f3f3;
+			}
+
+			div#futureHistoryChart {
+				height: 110px;
+				width: inherit;
+			}
+
+			div#chartPane {
+				position: relative;
+				/*top: 0;*/
+				bottom: 0;
+				width: 100%;
+				height: 100%;
+			}
+
+			div#colorBar {
+				width: 310px;
+				height: 80px;
+				z-index: 999;
+				position: absolute;
+				float: right;
+				bottom: 0;
+				right: 1px;
+			}
+
+			.air_quality {
+				display: block;
+				overflow: hidden;
+				padding-right: 0;
+				text-align: right;
+				float: right;
+				max-width: 310px;
+			}
+
+			.air_quality ul {
+				overflow: hidden;
+				width: 100%;
+			}
+
+			.air_quality ul li {
+				float: left;
+				font-size: 14px;
+				color: #fff;
+				height: 30px;
+				line-height: 30px;
+				width: 40px;
+				text-align: center;
+			}
+
+			.air_quality ul li:first-child {
+				width: 65px;
+				padding-right: 5px;
+				text-align: right;
+				background: rgba(0, 0, 0, 0.5);
+				border-radius: 3px 0 0 3px;
+			}
+
+			.air_quality ul li.red,
+			.air_quality ul li.purpie,
+			.air_quality ul li.crimson {
+				color: #fff;
+			}
+
+			.purpie {
+				background-color: rgba(182, 0, 100, 1);
+			}
+
+			.crimson {
+				background-color: rgba(126, 1, 35, 1);
+			}
+
+			.yellow {
+				background: rgb(255, 255, 0);
+			}
+
+			.red {
+				background: rgb(255, 0, 0);
+			}
+
+			.orange {
+				background: rgb(255, 153, 0);
+			}
+
+			.green {
+				background: rgb(0, 255, 0);
+			}
+
+			.metric_egend {
+				overflow: hidden;
+				padding-top: 20px;
+				float: right;
+			}
+
+			.metric_egend span {
+				float: left;
+				width: 30px;
+				text-align: center;
+				font-size: 12px;
+				color: #fff;
+				height: 30px;
+				line-height: 30px;
+			}
+
+			.metric_egend span:nth-child(2) {
+				background: rgba(37, 74, 255, 1);
+			}
+
+			.metric_egend span:first-child {
+				width: 75px;
+				padding-right: 5px;
+				text-align: right;
+				font-size: 14px;
+			}
+
+			.metric_egend span.linear_gradient1 {
+				background: linear-gradient(to right, rgba(37, 74, 220, 1), rgba(31, 81, 220, 1), rgba(0, 123, 215, 1));
+			}
+
+			.metric_egend span.linear_gradient2 {
+				background: linear-gradient(to right, rgba(0, 123, 215, 1), rgba(17, 196, 202, 1));
+			}
+
+			.metric_egend span.linear_gradient3 {
+				background: linear-gradient(to right, rgba(17, 196, 202, 1), rgba(0, 234, 0, 1));
+			}
+
+			.metric_egend span.linear_gradient4 {
+				background: linear-gradient(to right, rgba(0, 234, 0, 1), rgba(254, 186, 0, 1));
+			}
+
+			.metric_egend span.linear_gradient5 {
+				background: linear-gradient(to right, rgba(254, 186, 0, 1), rgba(197, 0, 74, 1));
+			}
+
+			.metric_egend span.linear_gradient6 {
+				background: linear-gradient(to right, rgba(197, 0, 74, 1), rgba(204, 24, 184, 1));
+			}
+
+			.metric_egend span.linear_gradient7 {
+				background: linear-gradient(to right, rgba(204, 24, 184, 1), rgba(71, 80, 222, 1));
+			}
+
+			.metric_egend span:first-child {
+				width: 65px;
+				border-radius: 3px 0 0 3px;
+				background: rgba(0, 0, 0, 0.4);
+			}
+
+            div#colourCode {
+                height: 30px;
+                margin-top: 45px;
+            }
+
+			table.colorTip {
+				color: #fff;
+				font-size: 12px;
+				float: right;
+				border-collapse: collapse;
+				border-spacing: 0;
+				z-index: 1001;
+				background: rgba(51, 51, 51, .55)
+			}
+
+			.colorTip .everyColorTip {
+				background: transparent;
+			}
+
+			.colorTip .everyColorTip {
+				display: inline-block;
+				width: calc(305px / 6);
+				height: 20px;
+				text-align: center;
+				vertical-align: middle;
+				line-height: 20px;
+			}
+
+			div#overlay-color1 {
+				width: 310px;
+				display: flex;
+			}
+
+			.ol-attribution {
+				display: none;
+			}
+
+			.ol-zoom {
+				z-index: 1000;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="map">
+			<div id='windpopup' class='ol-wind-popup'>
+				<div id='wind-popup-content'></div>
+			</div>
+			<div id='popup' class='ol-popup'>
+				<a href='#' id='popup-closer' class='ol-popup-closer' title="关闭"></a>
+				<a href="#" id="icon-chart" class="ol-popup-chart" title="点击查看未来五日小时预报"></a>
+				<div id='popup-content'></div>
+			</div>
+			<div id="ol-layerControl" class="ol-layerControl ol-layerSwitch" title="图层"></div>
+		</div>
+		<div id="colorBar">
+			<div class="air_quality">
+				<ul>
+					<li>污染级别:</li>
+					<li class="green" style="color: #000000;">优</li>
+					<li class="yellow" style="color: #000000;">良</li>
+					<li class="orange" style="color: #000000;">轻度</li>
+					<li class="red">中度</li>
+					<li class="purpie">重度</li>
+					<li class="crimson">严重</li>
+				</ul>
+			</div>
+            <div id="colourCode" style="display: none;">
+                <canvas id="overlay-color"></canvas>
+                <table class="colorTip">
+                    <tbody>
+                    <tr style="white-space: nowrap;">
+                        <td class="everyColorTip"></td>
+                        <td class="everyColorTip"></td>
+                        <td class="everyColorTip"></td>
+                        <td class="everyColorTip"></td>
+                        <td class="everyColorTip"></td>
+                        <td class="everyColorTip"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+			<div id="legend" class="metric_egend">
+				<span>风&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp速:</span>
+				<span>m/s</span>
+				<span class="linear_gradient1">0</span>
+				<span class="linear_gradient2">3</span>
+				<span class="linear_gradient3">5</span>
+				<span class="linear_gradient4">10</span>
+				<span class="linear_gradient5">15</span>
+				<span class="linear_gradient6">20</span>
+				<span class="linear_gradient7">30</span>
+			</div>
+			<div id="climateLegend" class="metric_egend"></div>
+			<div id="overlay-color1" style="display: none"></div>
+		</div>
+
+        <div id="cityPane">
+            <label for="citySelect">
+                <input id="citySelect" class="cityinput" type="text" placeholder="请输入城市名称" autocomplete="off">
+            </label>
+            <a class="pIcon"></a>
+            <div id="curTimeInfo">
+                <div class="timeInfo">
+
+                </div>
+            </div>
+        </div>
+        <div id="forcast5day" class="forcast5day" style="display: none;">
+            <div class="forcast5day-close">×</div>
+        </div>
+		<script src="../plugin/windy/modules.js"></script>
+	</body>
+
+</html>
