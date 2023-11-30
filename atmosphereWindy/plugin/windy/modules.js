@@ -31,10 +31,10 @@
         }
 
         //全国城市选择器
-        citySelect = new Vcity.CitySelector({
-            input: 'citySelect'
-        });
-        Vcity.options.regionShow = false;
+        // citySelect = new Vcity.CitySelector({
+        //     input: 'citySelect'
+        // });
+        // Vcity.options.regionShow = false;
         //为了统一性 getStationsByCity 作为中转方法 只为返回选择的城市信息只能作為全局
         win.getStationsByCity = function(cityName) {
 

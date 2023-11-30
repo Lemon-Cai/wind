@@ -351,7 +351,8 @@
                         var lat = parseFloat(viewpoint[i].latitude);
                         var lonlat = {x: lon, y: lat};
                         var mercator = common.lonlat2mercator(lonlat);
-                        var src = $ctxStatic + "/gbq/modules/air/atmosphereWindy/plugin/images/qp/level" + getAQIIndex(parseInt(viewpoint[i].aqi)) + ".png"
+                        // var src = $ctxStatic + "/gbq/modules/air/atmosphereWindy/plugin/images/qp/level" + getAQIIndex(parseInt(viewpoint[i].aqi)) + ".png"
+                        var src = "/gbq/modules/air/atmosphereWindy/plugin/images/qp/level" + getAQIIndex(parseInt(viewpoint[i].aqi)) + ".png"
                         var anchor = new ol.Feature({
                             geometry: new ol.geom.Point([mercator.x, mercator.y]),
                             id: viewpoint[i].cityCode,//{longitude: viewpoint[i].longitude, latitude: viewpoint[i].latitude},cityid: "101200901",cityname: "宜昌"
